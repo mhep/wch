@@ -1,9 +1,13 @@
 // Simple enhancements for the Weather, Climate & Health group site
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupYearAndLastUpdated();
-  setupEventFilters();
-  setupPosterButton();
+  try {
+    setupYearAndLastUpdated();
+    setupEventFilters();
+    setupPosterButton();
+  } catch (error) {
+    console.error("Error initializing page:", error);
+  }
 });
 
 function setupYearAndLastUpdated() {
@@ -84,13 +88,21 @@ function setupPosterButton() {
 
     const itemsHtml = sorted
       .map((event) => {
-        const date = event.querySelector(".event-date")?.textContent.trim() || "";
-        const time = event.querySelector(".event-time")?.textContent.trim() || "";
-        const title = event.querySelector(".event-title")?.textContent.trim() || "";
-        const location = event.querySelector(".event-location")?.textContent.trim() || "";
-        const description = event.querySelector(".event-description")?.textContent.trim() || "";
-        const format = event.querySelector(".event-tag--format")?.textContent.trim() || "";
-        const kind = event.querySelector(".event-tag--kind")?.textContent.trim() || "";
+        const dateEl = event.querySelector(".event-date");
+        const timeEl = event.querySelector(".event-time");
+        const titleEl = event.querySelector(".event-title");
+        const locationEl = event.querySelector(".event-location");
+        const descriptionEl = event.querySelector(".event-description");
+        const formatEl = event.querySelector(".event-tag--format");
+        const kindEl = event.querySelector(".event-tag--kind");
+
+        const date = dateEl ? dateEl.textContent.trim() : "";
+        const time = timeEl ? timeEl.textContent.trim() : "";
+        const title = titleEl ? titleEl.textContent.trim() : "";
+        const location = locationEl ? locationEl.textContent.trim() : "";
+        const description = descriptionEl ? descriptionEl.textContent.trim() : "";
+        const format = formatEl ? formatEl.textContent.trim() : "";
+        const kind = kindEl ? kindEl.textContent.trim() : "";
         const typeLine = [format, kind].filter(Boolean).join(" · ");
 
         return `
