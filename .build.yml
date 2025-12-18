@@ -10,6 +10,7 @@ tasks:
       tar -czf ../site.tar.gz \
         index.html \
         script.js \
-        styles.css
+        styles.css \
+        qrcode.min.js
   - deploy: |
-      hut pages publish -d mgh.srht.site:wch site.tar.gz
+      hut pages publish -d mgh.srht.site -s wch site.tar.gz
