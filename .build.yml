@@ -12,4 +12,4 @@ tasks:
         script.js \
         styles.css
   - deploy: |
-      hut pages publish -d mgh.srht.site site.tar.gz
+      hut pages publish -d mgh.srht.site:wch site.tar.gz
