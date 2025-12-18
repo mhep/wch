@@ -119,6 +119,9 @@ h1 {
   background-color: var(--bg-alt);
 }
 
+.poster-title {
+  display: none;
+}
 .mailing-intro {
   margin-top: 0;
   margin-bottom: 20px;
@@ -327,6 +330,135 @@ p {
 .contact-label {
   font-weight: 600;
   margin-right: 4px;
+}
+
+.print-poster-button {
+  margin-top: 20px;
+  padding: 10px 14px;
+  font-size: 13px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--accent);
+  background-color: var(--accent);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.print-poster-button:hover {
+  background-color: #ffffff;
+  color: var(--accent);
+}
+
+@media print {
+  @page {
+    size: A3;
+    margin: 15mm;
+  }
+
+  body {
+    background: #ffffff;
+    font-size: 12pt;
+  }
+
+  .site-header,
+  .site-footer,
+  .site-nav,
+  .events-filters,
+  .mailing-intro,
+  #abstract,
+  #members,
+  #contact,
+  .print-poster-button {
+    display: none !important;
+  }
+
+  /* Only show upcoming events in the poster */
+  .event-item[data-status="past"] {
+    display: none !important;
+  }
+
+  .section {
+    padding-top: 0;
+  }
+
+  /* Poster-style layout and typography */
+  #events .container {
+    max-width: 100%;
+  }
+
+  .poster-title {
+    display: block;
+    font-size: 30pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 4mm;
+    text-align: left;
+  }
+
+  #events h2 {
+    font-size: 18pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 6mm;
+  }
+
+  #events .section-description {
+    font-size: 10pt;
+    margin-bottom: 6mm;
+  }
+
+  .events-list {
+    gap: 4mm;
+  }
+
+  .event-item {
+    grid-template-columns: 0.9fr 1.6fr;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .event-meta {
+    margin-bottom: 0.5mm;
+    page-break-inside: avoid;
+  }
+
+  .event-date {
+    font-size: 12pt;
+  }
+
+  .event-time {
+    font-size: 9pt;
+  }
+
+  .event-tags {
+    margin-top: 1mm;
+  }
+
+  .event-tag {
+    font-size: 8pt;
+  }
+
+  .event-title {
+    font-size: 14pt;
+    margin-bottom: 0.5mm;
+  }
+
+  .event-location {
+    font-size: 9pt;
+    margin-bottom: 0.5mm;
+  }
+
+  .event-description {
+    font-size: 9pt;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 .site-footer {
