@@ -48,9 +48,9 @@ a:hover {
   padding: 0 20px;
 }
 
-/* Allow the co-leads cards to breathe a bit more */
+/* Make co-leads section wider while keeping other sections narrower */
 #members .container {
-  max-width: 960px;
+  max-width: 900px;
 }
 
 .site-header {
