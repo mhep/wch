@@ -178,7 +178,7 @@ function setupPosterButton() {
       }
       .qrcode-container {
         position: fixed;
-        bottom: 20mm;
+        top: 20mm;
         right: 20mm;
       }
       .poster-event-row {
