@@ -92,7 +92,6 @@ function setupPosterButton() {
         const timeEl = event.querySelector(".event-time");
         const titleEl = event.querySelector(".event-title");
         const locationEl = event.querySelector(".event-location");
-        const descriptionEl = event.querySelector(".event-description");
         const formatEl = event.querySelector(".event-tag--format");
         const kindEl = event.querySelector(".event-tag--kind");
 
@@ -100,7 +99,6 @@ function setupPosterButton() {
         const time = timeEl ? timeEl.textContent.trim() : "";
         const title = titleEl ? titleEl.textContent.trim() : "";
         const location = locationEl ? locationEl.textContent.trim() : "";
-        const description = descriptionEl ? descriptionEl.textContent.trim() : "";
         const format = formatEl ? formatEl.textContent.trim() : "";
         const kind = kindEl ? kindEl.textContent.trim() : "";
         const typeLine = [format, kind].filter(Boolean).join(" · ");
@@ -115,7 +113,6 @@ function setupPosterButton() {
           <div class="poster-event-title">${title}</div>
           <div class="poster-event-type">${typeLine}</div>
           <div class="poster-event-location">${location}</div>
-          <div class="poster-event-description">${description}</div>
         </div>
       </div>`;
       })
@@ -211,9 +208,6 @@ function setupPosterButton() {
       .poster-event-location {
         font-style: italic;
         margin-bottom: 2.5mm;
-      }
-      .poster-event-description {
-        line-height: 1.6;
       }
       @page {
         size: A3;
