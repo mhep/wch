@@ -198,7 +198,7 @@ function setupPosterButton() {
         font-size: 12pt;
       }
       .poster-event-title {
-        font-size: 16pt;
+        font-size: 18pt;
         font-weight: 600;
         margin-bottom: 2mm;
       }
