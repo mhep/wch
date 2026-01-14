@@ -94,6 +94,7 @@ function setupPosterButton() {
         const locationEl = event.querySelector(".event-location");
         const formatEl = event.querySelector(".event-tag--format");
         const kindEl = event.querySelector(".event-tag--kind");
+        const descriptionEl = event.querySelector(".event-description");
 
         const date = dateEl ? dateEl.textContent.trim() : "";
         const time = timeEl ? timeEl.textContent.trim() : "";
@@ -103,6 +104,16 @@ function setupPosterButton() {
         const kind = kindEl ? kindEl.textContent.trim() : "";
         const typeLine = [format, kind].filter(Boolean).join(" · ");
 
+        // Extract co-organisation info from description
+        let coOrg = "";
+        if (descriptionEl) {
+          const text = descriptionEl.textContent;
+          const match = text.match(/Co-organised with[^\.]+\./);
+          if (match) {
+            coOrg = match[0];
+          }
+        }
+
         return `
       <div class="poster-event-row">
         <div class="poster-event-meta">
@@ -111,6 +122,7 @@ function setupPosterButton() {
         </div>
         <div class="poster-event-content">
           <div class="poster-event-title">${title}</div>
+          ${coOrg ? `<div class="poster-event-coorg">${coOrg}</div>` : ''}
           <div class="poster-event-type">${typeLine}</div>
           <div class="poster-event-location">${location}</div>
         </div>
@@ -141,9 +153,31 @@ function setupPosterButton() {
         color: var(--text);
         background: #ffffff;
         position: relative;
+        overflow: hidden;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        bottom: -45%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200%;
+        height: 180%;
+        background-repeat: no-repeat;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cfilter id='blurFilter' x='-50%25' y='-50%25' width='200%25' height='200%25'%3E%3CfeGaussianBlur in='SourceGraphic' stdDeviation='80' /%3E%3C/filter%3E%3ClinearGradient id='fadeUp' x1='0%25' y1='100%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='white' stop-opacity='0'/%3E%3Cstop offset='30%25' stop-color='white' stop-opacity='0'/%3E%3Cstop offset='100%25' stop-color='white' stop-opacity='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg filter='url(%23blurFilter)'%3E%3Cellipse cx='200' cy='520' rx='280' ry='200' fill='%23ff0000' opacity='0.7' /%3E%3Cellipse cx='300' cy='540' rx='270' ry='190' fill='%23ff0000' opacity='0.65' /%3E%3Cellipse cx='400' cy='520' rx='260' ry='180' fill='%23ff2200' opacity='0.6' /%3E%3C/g%3E%3Crect width='600' height='600' fill='url(%23fadeUp)' /%3E%3C/svg%3E");
+        background-size: contain;
+        background-position: bottom center;
+        z-index: -1;
       }
       .poster-page {
         padding: 24mm 20mm 20mm;
+      }
+      .poster-logo {
+        position: fixed;
+        top: 20mm;
+        right: 20mm;
+        height: 130px;
+        width: auto;
       }
       .poster-title {
         font-size: 48pt;
@@ -151,22 +185,22 @@ function setupPosterButton() {
         letter-spacing: 0.08em;
         text-transform: uppercase;
         margin: 0 0 4mm;
-        color: var(--purple);
+        color: #111827;
         line-height: 1.1;
       }
-      .poster-subtitle {
-        font-size: 13pt;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        margin: 0 0 10mm;
-        line-height: 1.4;
+      .poster-divider {
+        width: 120px;
+        height: 3px;
+        background: linear-gradient(to right, #ff0000, #ff2200);
+        margin: 6mm 0 10mm;
+        border-radius: 2px;
       }
       .poster-events-heading {
         font-size: 22pt;
         text-transform: uppercase;
         letter-spacing: 0.06em;
         margin: 0 0 6mm;
-        color: var(--purple);
+        color: #111827;
       }
       .poster-events {
         display: flex;
@@ -175,7 +209,7 @@ function setupPosterButton() {
       }
       .qrcode-container {
         position: fixed;
-        top: 20mm;
+        bottom: 20mm;
         right: 20mm;
       }
       .poster-event-row {
@@ -202,6 +236,10 @@ function setupPosterButton() {
         font-weight: 600;
         margin-bottom: 2mm;
       }
+      .poster-event-coorg {
+        font-size: 12pt;
+        margin-bottom: 2mm;
+      }
       .poster-event-type {
         margin-bottom: 2mm;
       }
@@ -221,9 +259,10 @@ function setupPosterButton() {
     </style>
   </head>
   <body>
+    <img src="imh.png" alt="IMH" class="poster-logo">
     <div class="poster-page">
       <h1 class="poster-title">Weather<br>Climate<br>Health</h1>
-      <p class="poster-subtitle">An Institute for Medical Humanities research theme<br>Durham University</p>
+      <div class="poster-divider"></div>
       <h2 class="poster-events-heading">Events</h2>
       <div class="poster-events">
         ${itemsHtml}
@@ -235,8 +274,8 @@ function setupPosterButton() {
         text: "https://mhep.github.io/wch/",
         width: 180,
         height: 180,
-        colorDark: "#4b306a",
-        colorLight: "#ffffff",
+        colorDark: "#ffffff",
+        colorLight: "transparent",
         correctLevel: QRCode.CorrectLevel.H
       });
     </script>

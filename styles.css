@@ -59,6 +59,7 @@ a:hover {
   z-index: 10;
   background: #ffffff;
   border-bottom: 1px solid var(--border);
+  position: relative;
 }
 
 .header-inner {
@@ -66,6 +67,16 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px 14px;
+  gap: 20px;
+}
+
+.site-logo {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100px;
+  width: auto;
 }
 
 .label {
@@ -361,7 +372,19 @@ p {
     font-size: 12pt;
   }
 
-  .site-header,
+  .site-header {
+    position: static;
+    border: none;
+  }
+
+  .site-logo {
+    display: block !important;
+    position: absolute;
+    left: 15mm;
+    top: 15mm;
+  }
+
+  .header-inner,
   .site-footer,
   .site-nav,
   .events-filters,
