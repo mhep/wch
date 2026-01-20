@@ -36,23 +36,62 @@ function setupEventFilters() {
 
   if (!buttons.length || !events.length || !list) return;
 
+  // Get today's date at midnight for comparison
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Update data-status based on actual date comparison
+  events.forEach((event) => {
+    const dateStr = event.getAttribute("data-date");
+    if (dateStr) {
+      const eventDate = new Date(dateStr);
+      eventDate.setHours(0, 0, 0, 0);
+      const status = eventDate < today ? "past" : "upcoming";
+      event.setAttribute("data-status", status);
+    }
+  });
+
   const applyFilter = (activeButton, filter) => {
     buttons.forEach((btn) => btn.classList.toggle("is-active", btn === activeButton));
 
-    // Always keep list in chronological order based on data-date
-    const sorted = events
-      .slice()
-      .sort((a, b) => {
-        const da = a.getAttribute("data-date") || "";
-        const db = b.getAttribute("data-date") || "";
-        return da.localeCompare(db);
-      });
+    // Separate events by status for different sort orders
+    const upcomingEvents = events.filter(e => e.getAttribute("data-status") === "upcoming");
+    const pastEvents = events.filter(e => e.getAttribute("data-status") === "past");
 
-    sorted.forEach((event) => {
+    // Sort upcoming events ascending (soonest first)
+    upcomingEvents.sort((a, b) => {
+      const da = a.getAttribute("data-date") || "";
+      const db = b.getAttribute("data-date") || "";
+      return da.localeCompare(db);
+    });
+
+    // Sort past events descending (most recent first)
+    pastEvents.sort((a, b) => {
+      const da = a.getAttribute("data-date") || "";
+      const db = b.getAttribute("data-date") || "";
+      return db.localeCompare(da);
+    });
+
+    // Combine based on filter
+    let sortedEvents = [];
+    if (filter === "upcoming") {
+      sortedEvents = upcomingEvents;
+    } else if (filter === "past") {
+      sortedEvents = pastEvents;
+    } else {
+      // For "all", show upcoming first, then past
+      sortedEvents = [...upcomingEvents, ...pastEvents];
+    }
+
+    // Reorder all events (upcoming first, then past) and show/hide based on filter
+    const allSorted = [...upcomingEvents, ...pastEvents];
+
+    // Clear and repopulate with all events
+    list.innerHTML = "";
+    allSorted.forEach((event) => {
       list.appendChild(event);
-      const status = event.getAttribute("data-status") || "all";
-      const show = filter === "all" || filter === status;
-      event.style.display = show ? "" : "none";
+      // Show or hide based on whether it's in the filtered list
+      event.style.display = sortedEvents.includes(event) ? "" : "none";
     });
   };
 
@@ -63,7 +102,7 @@ function setupEventFilters() {
     });
   });
 
-  // Default view: upcoming events only, in the DOM order (already chronological)
+  // Default view: upcoming events only, in chronological order
   const defaultButton = buttons.find((btn) => btn.getAttribute("data-filter") === "upcoming");
   if (defaultButton) {
     applyFilter(defaultButton, "upcoming");
@@ -75,16 +114,28 @@ function setupPosterButton() {
   if (!button) return;
 
   button.addEventListener("click", () => {
-    const events = Array.from(document.querySelectorAll(".event-item[data-status='upcoming']"));
-    if (!events.length) return;
+    // Get all events
+    const allEvents = Array.from(document.querySelectorAll(".event-item"));
 
-    const sorted = events
-      .slice()
-      .sort((a, b) => {
-        const da = a.getAttribute("data-date") || "";
-        const db = b.getAttribute("data-date") || "";
-        return da.localeCompare(db);
-      });
+    // Sort all events chronologically
+    const sortedEvents = allEvents
+      .map((event) => {
+        const dateStr = event.getAttribute("data-date");
+        if (!dateStr) return null;
+        const eventDate = new Date(dateStr);
+        eventDate.setHours(0, 0, 0, 0);
+        return { event, eventDate };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.eventDate - b.eventDate);
+
+    // Take the last 5 events (counting back from the farthest in the future)
+    const lastFive = sortedEvents.slice(-5);
+
+    // Extract just the event elements
+    const sorted = lastFive.map(item => item.event);
+
+    if (!sorted.length) return;
 
     const itemsHtml = sorted
       .map((event) => {
