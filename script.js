@@ -79,19 +79,19 @@ function setupEventFilters() {
     } else if (filter === "past") {
       sortedEvents = pastEvents;
     } else {
-      // For "all", show upcoming first, then past
-      sortedEvents = [...upcomingEvents, ...pastEvents];
+      // For "all", sort all events chronologically (ascending)
+      sortedEvents = [...events].sort((a, b) => {
+        const da = a.getAttribute("data-date") || "";
+        const db = b.getAttribute("data-date") || "";
+        return da.localeCompare(db);
+      });
     }
 
-    // Reorder all events (upcoming first, then past) and show/hide based on filter
-    const allSorted = [...upcomingEvents, ...pastEvents];
-
-    // Clear and repopulate with all events
+    // Clear and repopulate with sorted events
     list.innerHTML = "";
-    allSorted.forEach((event) => {
+    sortedEvents.forEach((event) => {
       list.appendChild(event);
-      // Show or hide based on whether it's in the filtered list
-      event.style.display = sortedEvents.includes(event) ? "" : "none";
+      event.style.display = "";
     });
   };
 
@@ -117,23 +117,43 @@ function setupPosterButton() {
     // Get all events
     const allEvents = Array.from(document.querySelectorAll(".event-item"));
 
-    // Sort all events chronologically
-    const sortedEvents = allEvents
+    // Get today's date at midnight for comparison
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Parse and categorize events
+    const parsedEvents = allEvents
       .map((event) => {
         const dateStr = event.getAttribute("data-date");
         if (!dateStr) return null;
         const eventDate = new Date(dateStr);
         eventDate.setHours(0, 0, 0, 0);
-        return { event, eventDate };
+        const isUpcoming = eventDate >= today;
+        return { event, eventDate, isUpcoming };
       })
-      .filter(Boolean)
-      .sort((a, b) => a.eventDate - b.eventDate);
+      .filter(Boolean);
 
-    // Take the last 5 events (counting back from the farthest in the future)
-    const lastFive = sortedEvents.slice(-5);
+    // Separate upcoming and past events
+    const upcomingEvents = parsedEvents
+      .filter(e => e.isUpcoming)
+      .sort((a, b) => a.eventDate - b.eventDate); // Soonest first
+
+    const pastEvents = parsedEvents
+      .filter(e => !e.isUpcoming)
+      .sort((a, b) => b.eventDate - a.eventDate); // Most recent first
+
+    // Take up to 5 upcoming events, backfill with recent past if needed
+    let selectedEvents = upcomingEvents.slice(0, 5);
+    if (selectedEvents.length < 5) {
+      const needed = 5 - selectedEvents.length;
+      selectedEvents = [...selectedEvents, ...pastEvents.slice(0, needed)];
+    }
+
+    // Sort selected events chronologically for display
+    selectedEvents.sort((a, b) => a.eventDate - b.eventDate);
 
     // Extract just the event elements
-    const sorted = lastFive.map(item => item.event);
+    const sorted = selectedEvents.map(item => item.event);
 
     if (!sorted.length) return;
 
