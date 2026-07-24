@@ -1,16 +1,19 @@
 :root {
-  --bg: #f5f5f7;
+  --bg: #f5f3f9;
   --bg-alt: #ffffff;
-  --text: #111827;
-  --muted: #4b5563;
+  --text: #2d2a33;
+  --muted: #605b6c;
   --accent: #4b306a; /* Durham purple-inspired */
-  --accent-soft: #ede7f6;
-  --border: #d1d5db;
-  --card-shadow: none;
-  --radius-lg: 4px;
-  --radius-md: 4px;
-  --radius-sm: 2px;
-  --transition-fast: 150ms ease-out;
+  --accent-soft: #ece5f6;
+  --warm-soft: #fcefe7; /* friendly coral tint */
+  --warm-text: #a85a3c;
+  --border: #e6e1ef;
+  --card-shadow: 0 1px 2px rgba(45, 42, 51, 0.04), 0 6px 20px rgba(75, 48, 106, 0.05);
+  --card-shadow-hover: 0 2px 6px rgba(45, 42, 51, 0.06), 0 12px 30px rgba(75, 48, 106, 0.09);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --transition-fast: 160ms ease-out;
 }
 
 *,
@@ -130,9 +133,6 @@ h1 {
   background-color: var(--bg-alt);
 }
 
-.poster-title {
-  display: none;
-}
 .mailing-intro {
   margin-top: 0;
   margin-bottom: 20px;
@@ -181,7 +181,7 @@ p {
 .card {
   background-color: var(--bg-alt);
   border-radius: var(--radius-lg);
-  padding: 16px 16px 14px;
+  padding: 20px 20px 18px;
   border: 1px solid var(--border);
   box-shadow: var(--card-shadow);
   transition: transform var(--transition-fast), box-shadow var(--transition-fast),
@@ -189,8 +189,9 @@ p {
 }
 
 .card:hover {
-  transform: translateY(-1px);
-  border-color: #9ca3af;
+  transform: translateY(-2px);
+  border-color: #d3c8e6;
+  box-shadow: var(--card-shadow-hover);
 }
 
 .card-title {
@@ -209,37 +210,68 @@ p {
   font-size: 14px;
 }
 
-.events-filters {
-  display: inline-flex;
-  background-color: #ffffff;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  padding: 3px;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
-  margin-bottom: 16px;
+/* Save-the-date teaser */
+.teaser-card {
+  position: relative;
+  overflow: hidden;
+  padding: 32px 32px 30px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed #cbb8e6;
+  background:
+    radial-gradient(120% 140% at 90% -20%, rgba(224, 138, 106, 0.14), transparent 55%),
+    linear-gradient(135deg, #f3ecfa 0%, #fdf1ea 100%);
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.filter-button {
-  border: none;
-  background: transparent;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast),
-    transform var(--transition-fast);
+.teaser-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
 }
 
-.filter-button:hover {
-  background-color: rgba(226, 232, 240, 0.7);
-  transform: translateY(-1px);
+.teaser-badge {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background-color: var(--accent);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.filter-button.is-active {
-  background-color: var(--accent-soft);
+.teaser-title {
+  margin: 0 0 10px;
+  font-size: clamp(20px, 2.6vw, 26px);
   color: var(--accent);
+}
+
+.teaser-emoji {
+  display: inline-block;
+  transform: translateY(1px);
+}
+
+.teaser-card:hover .teaser-emoji {
+  animation: teaser-float 1.6s ease-in-out infinite;
+}
+
+@keyframes teaser-float {
+  0%, 100% { transform: translateY(1px); }
+  50% { transform: translateY(-4px); }
+}
+
+.teaser-text {
+  margin: 0 0 12px;
+  max-width: 52ch;
+  font-size: 15px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .teaser-card:hover .teaser-emoji {
+    animation: none;
+  }
 }
 
 .events-list {
@@ -248,26 +280,26 @@ p {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .event-item {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);
   gap: 16px;
-  padding: 14px 16px;
+  padding: 18px 20px;
   background-color: #ffffff;
-  border-radius: 0;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  box-shadow: none;
+  box-shadow: var(--card-shadow);
   transition: transform var(--transition-fast), border-color var(--transition-fast),
-    background-color var(--transition-fast);
+    box-shadow var(--transition-fast);
 }
 
 .event-item:hover {
   transform: translateY(-2px);
-  border-color: #9ca3af;
-  background-color: #f9fafb;
+  border-color: #d3c8e6;
+  box-shadow: var(--card-shadow-hover);
 }
 
 .event-meta {
@@ -296,23 +328,26 @@ p {
 }
 
 .event-tag {
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  border: 1px solid #cbd5e1;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background-color: #f9fafb;
+  background-color: #f3f1f7;
+  color: var(--muted);
 }
 
 .event-tag--format {
   background-color: var(--accent-soft);
-  border-color: #c4b5fd;
+  border-color: #d7c9ec;
   color: var(--accent);
 }
 
 .event-tag--kind {
-  color: var(--muted);
+  background-color: var(--warm-soft);
+  border-color: #f3d8c9;
+  color: var(--warm-text);
 }
 
 .event-content {
@@ -343,147 +378,6 @@ p {
   margin-right: 4px;
 }
 
-.print-poster-button {
-  margin-top: 20px;
-  padding: 10px 14px;
-  font-size: 13px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--accent);
-  background-color: var(--accent);
-  color: #ffffff;
-  cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast),
-    border-color var(--transition-fast);
-}
-
-.print-poster-button:hover {
-  background-color: #ffffff;
-  color: var(--accent);
-}
-
-@media print {
-  @page {
-    size: A3;
-    margin: 15mm;
-  }
-
-  body {
-    background: #ffffff;
-    font-size: 12pt;
-  }
-
-  .site-header {
-    position: static;
-    border: none;
-  }
-
-  .site-logo {
-    display: block !important;
-    position: absolute;
-    left: 15mm;
-    top: 15mm;
-  }
-
-  .header-inner,
-  .site-footer,
-  .site-nav,
-  .events-filters,
-  .mailing-intro,
-  #abstract,
-  #members,
-  #contact,
-  .print-poster-button {
-    display: none !important;
-  }
-
-  /* Only show upcoming events in the poster */
-  .event-item[data-status="past"] {
-    display: none !important;
-  }
-
-  .section {
-    padding-top: 0;
-  }
-
-  /* Poster-style layout and typography */
-  #events .container {
-    max-width: 100%;
-  }
-
-  .poster-title {
-    display: block;
-    font-size: 30pt;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin: 0 0 4mm;
-    text-align: left;
-  }
-
-  #events h2 {
-    font-size: 18pt;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 6mm;
-  }
-
-  #events .section-description {
-    font-size: 10pt;
-    margin-bottom: 6mm;
-  }
-
-  .events-list {
-    gap: 4mm;
-  }
-
-  .event-item {
-    grid-template-columns: 0.9fr 1.6fr;
-    padding: 0;
-    border: none;
-    background: transparent;
-  }
-
-  .event-meta {
-    margin-bottom: 0.5mm;
-    page-break-inside: avoid;
-  }
-
-  .event-date {
-    font-size: 12pt;
-  }
-
-  .event-time {
-    font-size: 9pt;
-  }
-
-  .event-tags {
-    margin-top: 1mm;
-  }
-
-  .event-tag {
-    font-size: 8pt;
-  }
-
-  .event-title {
-    font-size: 14pt;
-    margin-bottom: 0.5mm;
-  }
-
-  .event-location {
-    font-size: 9pt;
-    margin-bottom: 0.5mm;
-  }
-
-  .event-description {
-    font-size: 9pt;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-}
-
 .site-footer {
   border-top: 1px solid rgba(226, 232, 240, 0.9);
   padding: 14px 0 18px;
@@ -503,11 +397,11 @@ p {
   font-size: 11px;
 }
 
-@media (max-width: 800px) {
+/* Stack the logo above the title before the centered header text can
+   collide with the absolutely-positioned logo in the left gutter. */
+@media (max-width: 1120px) {
   .site-header {
-    position: relative;
     background: #ffffff;
-    padding-top: 0;
   }
 
   .site-logo {
@@ -515,11 +409,12 @@ p {
     transform: none;
     display: block;
     height: 80px;
-    margin: 0 0 24px 20px;
+    margin: 0 0 20px 20px;
     padding-top: 16px;
   }
 
   .header-inner {
+    max-width: none;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
@@ -531,7 +426,9 @@ p {
     justify-content: flex-start;
     flex-wrap: wrap;
   }
+}
 
+@media (max-width: 800px) {
   .grid-3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
